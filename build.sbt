@@ -26,3 +26,15 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "1.9.5",
   "org.specs2" %% "specs2" % "2.4.2" % "test"
 )
+
+publishMavenStyle := true
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
+
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (version.value.trim.endsWith("SNAPSHOT"))
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
