@@ -49,7 +49,7 @@ class PactRunner(klass: Class[_]) extends SpringJUnit4ClassRunner(klass: Class[_
 
 
   private def pactTestWith(pactSetup: ProviderState, controller: AnyRef): Unit = {
-    allInteractions.filter(_.providerState.contains(pactSetup.value())) match {
+    allInteractions.filter(_.providerState.exists(_ == pactSetup.value())) match {
       case Nil => fail("Specified ProviderState is not found: " + pactSetup)
       case interactions => interactions.foreach { interaction =>
         RequestMatcherBuilder.build(interaction.request) match {
