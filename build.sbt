@@ -1,6 +1,6 @@
 name := "pact-jvm-provider-spring-mvc"
 
-version := "0.2.1"
+version := "0.2.2-SNAPSHOT"
 
 organization := "com.reagroup"
 
@@ -11,7 +11,6 @@ crossScalaVersions := Seq("2.10.4", "2.11.4")
 sbtVersion := "0.13.7"
 
 resolvers ++= Seq(
-  "ibiblio" at "http://mirrors.ibiblio.org/pub/mirrors/maven2",
   "Sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
   "Sonatype releases" at "http://oss.sonatype.org/content/repositories/releases"
 )
