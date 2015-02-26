@@ -1,12 +1,12 @@
 name := "pact-jvm-provider-spring-mvc"
 
-version := "0.1"
+version := "0.2.0"
 
 organization := "com.reagroup"
 
-scalaVersion := "2.11.0"
+scalaVersion := "2.11.4"
 
-sbtVersion := "0.13.5"
+sbtVersion := "0.13.7"
 
 resolvers ++= Seq(
   "ibiblio" at "http://mirrors.ibiblio.org/pub/mirrors/maven2",
