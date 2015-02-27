@@ -12,13 +12,20 @@ import scala.util.{Failure, Success, Try}
 object RequestMatcherBuilder {
 
   def build(request: Request): Try[MockHttpServletRequestBuilder] = {
-    val components = UriComponentsBuilder.fromUriString(request.path).build
+    val components = buildUriComponents(request)
     createBuildByHttpMethod(request, components).map { builder =>
       buildReqQueryString(builder, components)
       buildReqHeaders(builder, request)
       buildReqBody(builder, request)
       builder
     }
+  }
+
+  private def buildUriComponents(request: Request) = {
+    UriComponentsBuilder
+      .fromUriString(request.path)
+      .query(request.query.getOrElse(""))
+      .build
   }
 
   private def createBuildByHttpMethod(request: Request, components: UriComponents): Try[MockHttpServletRequestBuilder] = {

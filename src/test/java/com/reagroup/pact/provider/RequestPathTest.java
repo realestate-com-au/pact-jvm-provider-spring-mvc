@@ -14,14 +14,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContextPactTest.xml"})
-public class RequestMatcherBuilderTest {
+public class RequestPathTest {
 
     @Autowired
     private MyController myController;
 
     @Test
     public void shouldResponseCorrectlyIfRequestPathMatchesExactly() throws Exception {
-        MockHttpServletRequestBuilder builder = RequestMatcherBuilderHelper.requestBuilder("get", "/hello/plain");
+        MockHttpServletRequestBuilder builder = RequestBuilder.path("/hello/plain").build();
         ServerBuilder.build(myController)
                 .perform(builder)
                 .andExpect(status().is(HttpStatus.OK.value()))
@@ -30,7 +30,7 @@ public class RequestMatcherBuilderTest {
 
     @Test
     public void shouldResponseNotFoundIfRequestPathHasDifferentCase() throws Exception {
-        MockHttpServletRequestBuilder builder = RequestMatcherBuilderHelper.requestBuilder("get", "/Hello/Plain");
+        MockHttpServletRequestBuilder builder = RequestBuilder.path("/Hello/Plain").build();
         ServerBuilder.build(myController)
                 .perform(builder)
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
@@ -38,7 +38,7 @@ public class RequestMatcherBuilderTest {
 
     @Test
     public void shouldResponseNotFoundIfRequestPathHasDifferentEndingSlash() throws Exception {
-        MockHttpServletRequestBuilder builder = RequestMatcherBuilderHelper.requestBuilder("get", "/hello/plain/");
+        MockHttpServletRequestBuilder builder = RequestBuilder.path("/hello/plain/").build();
         ServerBuilder.build(myController)
                 .perform(builder)
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
