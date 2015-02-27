@@ -1,0 +1,46 @@
+{
+  "provider": {
+    "name": "provider-side"
+  },
+  "consumer": {
+    "name": "consumer-side"
+  },
+  "interactions": [
+    {
+      "provider_state": "response 'world' for 'get' request",
+      "description": "client request with 'get'",
+      "request": {
+        "method": "get",
+        "path": "/hello",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "hello": "world"
+        }
+      }
+    },
+    {
+      "provider_state": "response 'world' for 'gET' request",
+      "description": "client request with 'get'",
+      "request": {
+        "method": "gET",
+        "path": "/hello",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "hello": "world"
+        }
+      }
+    }
+  ],
+  "metadata": {
+  }
+}

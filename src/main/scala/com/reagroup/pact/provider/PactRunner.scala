@@ -97,9 +97,9 @@ object RequestMatcherBuilder {
   def build(request: Request): Try[MockHttpServletRequestBuilder] = {
     val components = UriComponentsBuilder.fromUriString(request.path).build
     createBuildByHttpMethod(request, components).map { builder =>
-      checkReqQueryString(builder, components)
-      checkReqHeaders(builder, request)
-      checkReqBody(builder, request)
+      buildReqQueryString(builder, components)
+      buildReqHeaders(builder, request)
+      buildReqBody(builder, request)
       builder
     }
   }
@@ -117,11 +117,11 @@ object RequestMatcherBuilder {
     }
   }
 
-  private def checkReqBody(builder: MockHttpServletRequestBuilder, request: Request): Unit = {
+  private def buildReqBody(builder: MockHttpServletRequestBuilder, request: Request): Unit = {
     request.body.foreach(body => builder.content(body))
   }
 
-  private def checkReqQueryString(builder: MockHttpServletRequestBuilder, components: UriComponents): Unit = {
+  private def buildReqQueryString(builder: MockHttpServletRequestBuilder, components: UriComponents): Unit = {
     val queryParams = components.getQueryParams
     for (key <- queryParams.keySet) {
       val values = queryParams.get(key).toList
@@ -130,7 +130,7 @@ object RequestMatcherBuilder {
     }
   }
 
-  private def checkReqHeaders(builder: MockHttpServletRequestBuilder, request: Request): Unit = for {
+  private def buildReqHeaders(builder: MockHttpServletRequestBuilder, request: Request): Unit = for {
     headers <- request.headers
     (name, value) <- headers
   } builder.header(name, value)

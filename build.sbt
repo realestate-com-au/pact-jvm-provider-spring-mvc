@@ -24,6 +24,7 @@ libraryDependencies ++= Seq(
   "org.springframework" % "spring-context" % "4.1.3.RELEASE",
   "org.springframework" % "spring-core" % "4.1.3.RELEASE",
   "junit" % "junit" % "4.12",
+  "org.skyscreamer" % "jsonassert" % "1.2.3",
   "javax.servlet" % "javax.servlet-api" % "3.0.1",
   "org.mockito" % "mockito-core" % "1.9.5",
   "org.specs2" %% "specs2" % "2.4.2" % "test"
