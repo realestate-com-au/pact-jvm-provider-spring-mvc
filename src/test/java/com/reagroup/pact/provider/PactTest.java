@@ -13,13 +13,14 @@ public class PactTest {
     @Autowired
     private MyController myController;
 
-    @ProviderState("response 'world' for 'get' request")
+    @ProviderState("response hello world for 'get' request")
     public MyController shouldGetCorrectResponseIfRequestMethodAreExactlyEqual() {
         return myController;
     }
 
-    @ProviderState("response 'world' for 'gET' request")
+    @ProviderState("response hello world for 'gET' request")
     public MyController shouldGetCorrectResponseIfRequestMethodAreCaseInsensitiveEqual() {
         return myController;
     }
+
 }

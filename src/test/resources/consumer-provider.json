@@ -7,11 +7,11 @@
   },
   "interactions": [
     {
-      "provider_state": "response 'world' for 'get' request",
+      "provider_state": "response hello world for 'get' request",
       "description": "client request with 'get'",
       "request": {
         "method": "get",
-        "path": "/hello",
+        "path": "/hello/json",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -24,11 +24,11 @@
       }
     },
     {
-      "provider_state": "response 'world' for 'gET' request",
+      "provider_state": "response hello world for 'gET' request",
       "description": "client request with 'get'",
       "request": {
         "method": "gET",
-        "path": "/hello",
+        "path": "/hello/json",
         "headers": {
           "Content-Type": "application/json"
         }
