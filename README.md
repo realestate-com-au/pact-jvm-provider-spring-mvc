@@ -129,6 +129,13 @@ Mark a method as a preparing method for a specified provider state. The method w
 The content of `@ProviderState` should be exactly the same as one of the provider state in the pact JSON file, otherwise
 an error will be thrown.
 
+### uriPathEq
+
+You can use the `uriPathEq` exposed by object `PactRunner` to check if two URIs path equal to each other without the host part,
+which may be useful when writing mocking methods.
+
+Say: `http://aaa.com:8888/hello/world` are equal to `https://bbb.com:9999/hello/world` with `uriPathEq`
+
 Run the test
 ------------
 
