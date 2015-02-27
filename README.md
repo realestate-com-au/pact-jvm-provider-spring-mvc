@@ -1,6 +1,6 @@
 # pact-jvm-provider-spring-mvc
 
-A test runner to help to write provider pact tests with spring mvc.
+A test runner to help to write provider pact tests with spring mvc, followed [pact spec](https://github.com/bethesque/pact-specification).
 
 There are already several projects help to write provider test in [pact-jvm](https://github.com/DiUS/pact-jvm) repository,
 e.g. gradle, maven, sbt, specs2, but we can't find a convenient way to write for spring-mvc projects.
