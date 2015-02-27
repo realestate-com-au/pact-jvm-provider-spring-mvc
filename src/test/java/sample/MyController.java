@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +31,11 @@ public class MyController {
         } else {
             return new ResponseEntity<String>("unknown", HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = "/hello/headers", method = RequestMethod.GET)
+    public ResponseEntity<String> helloHeaders(@RequestHeader("header1") String header1, @RequestHeader("header2") String header2) {
+        return new ResponseEntity<String>(header1 + "+" + header2, HttpStatus.OK);
     }
 
 }
