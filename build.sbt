@@ -1,6 +1,6 @@
 name := "pact-jvm-provider-spring-mvc"
 
-version := "0.2.2-SNAPSHOT"
+version := "0.2.5-SNAPSHOT"
 
 organization := "com.reagroup"
 
@@ -10,10 +10,11 @@ crossScalaVersions := Seq("2.10.4", "2.11.4")
 
 sbtVersion := "0.13.7"
 
-resolvers ++= Seq(
-  "Sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
-  "Sonatype releases" at "http://oss.sonatype.org/content/repositories/releases"
-)
+val sonatypeSnapshots = "Sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+
+val sonatypeReleases = "Sonatype releases" at "http://oss.sonatype.org/content/repositories/releases"
+
+resolvers ++= Seq(sonatypeSnapshots, sonatypeReleases)
 
 libraryDependencies ++= Seq(
   "au.com.dius" %% "pact-jvm-model" % "2.1.11",
@@ -33,9 +34,8 @@ publishMavenStyle := true
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
 publishTo := {
-  val nexus = "https://oss.sonatype.org/"
   if (version.value.trim.endsWith("SNAPSHOT"))
-    Some("snapshots" at nexus + "content/repositories/snapshots")
+    Some(sonatypeSnapshots)
   else
-    Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    Some(sonatypeReleases)
 }
