@@ -5,15 +5,15 @@ import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.util.MultiValueMap
-import sample.{MyControllerWithService, MyResponseService}
+import sample.{MyController, MyService}
 
 class ResponseCheckingTest extends Specification with Mockito {
 
   isolated
 
-  private val myResponseService = mock[MyResponseService]
+  private val myResponseService = mock[MyService]
 
-  private val myControllerWithService = new MyControllerWithService().withMyResponseService(myResponseService)
+  private val myControllerWithService = new MyController().withMyResponseService(myResponseService)
 
   private val pactRunner = new InteractionFileReader with InteractionRunner {
     override val testClass: Class[_] = null

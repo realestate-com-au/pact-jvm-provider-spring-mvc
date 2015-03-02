@@ -3,7 +3,7 @@ package sample;
 
 import org.springframework.http.ResponseEntity;
 
-public interface MyResponseService {
+public interface MyService {
 
     <T> ResponseEntity<T> getResponse();
 
