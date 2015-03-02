@@ -43,7 +43,7 @@ public class RequestHeadersTest {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("header1", "value1");
         headers.put("header2", "value2");
-        headers.put("header3", "value3");
+        headers.put("extra-header-not-used-by-controller", "but-it-should-be-ok");
         testWithHeaders(headers);
     }
 
