@@ -1,0 +1,41 @@
+{
+  "provider": {
+    "name": "provider-side"
+  },
+  "consumer": {
+    "name": "consumer-side"
+  },
+  "interactions": [
+    {
+      "provider_state": "state1",
+      "description": "description1",
+      "request": {
+        "method": "get",
+        "path": "/hello/json1",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "hello": "world1"
+        }
+      }
+    },
+    {
+      "provider_state": "state2",
+      "description": "description2",
+      "request": {
+        "method": "post",
+        "path": "/hello/json2",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "response": {
+        "status": 401
+      }
+    }
+  ]
+}
