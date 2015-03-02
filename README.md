@@ -140,3 +140,8 @@ Run the test
 ------------
 
 Just run the test as normal junit test, you will get the reports.
+
+A live demo
+-----------
+
+See the file: <https://github.com/realestate-com-au/pact-jvm-provider-spring-mvc/blob/17c22bde4ff82776dbed7cab8b332cec20ae4986/src/test/java/com/reagroup/pact/provider/PactExampleTest.java>
