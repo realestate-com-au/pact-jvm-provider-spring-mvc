@@ -145,3 +145,30 @@ A live demo
 -----------
 
 See the file: <https://github.com/realestate-com-au/pact-jvm-provider-spring-mvc/blob/17c22bde4ff82776dbed7cab8b332cec20ae4986/src/test/java/com/reagroup/pact/provider/PactExampleTest.java>
+
+For Developers
+==============
+
+How to upload to sonatype
+-------------------------
+
+1. Import PGP keys from <https://rattic.eqx.realestate.com.au/cred/detail/2842/>, follow the description there
+
+2. Get the token from <https://rattic.eqx.realestate.com.au/cred/detail/2828/>, which is used for publishing only
+
+3. Create `~/.sbt/0.13/sonatype.sbt`, fill content:
+
+        credentials += Credentials("Sonatype Nexus Repository Manager",
+                "oss.sonatype.org",
+                "<token_username>",
+                "<token_password>")
+
+    The `token_username` and `token_password` is coming from step 2
+
+4. When you modified the code, don't forget increase the `version` from `build.sbt`
+
+5. run under sbt: `+publishSigned` (don't miss the `+`, which means cross-building)
+
+6. release all published jars: `sonatypeReleaseAll`
+
+7. wait for several hours before it appears on maven central
