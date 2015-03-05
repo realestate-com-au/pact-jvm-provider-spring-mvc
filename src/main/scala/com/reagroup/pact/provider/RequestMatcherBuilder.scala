@@ -1,5 +1,6 @@
 package com.reagroup.pact.provider
 
+import java.net.URLDecoder
 import javax.servlet.http.Cookie
 
 import au.com.dius.pact.model.Request
@@ -24,7 +25,7 @@ object RequestMatcherBuilder {
   private def buildUriComponents(request: Request) = {
     UriComponentsBuilder
       .fromUriString(request.path)
-      .query(request.query.getOrElse(""))
+      .query(request.query.map(URLDecoder.decode(_, "UTF-8")).getOrElse(""))
       .build
   }
 
