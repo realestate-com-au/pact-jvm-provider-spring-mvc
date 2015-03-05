@@ -23,9 +23,10 @@ object RequestMatcherBuilder {
   }
 
   private def buildUriComponents(request: Request) = {
+    def decode(s: String) = URLDecoder.decode(s, "UTF-8")
     UriComponentsBuilder
-      .fromUriString(request.path)
-      .query(request.query.map(URLDecoder.decode(_, "UTF-8")).getOrElse(""))
+      .fromUriString(decode(request.path))
+      .query(request.query.map(decode).getOrElse(""))
       .build
   }
 

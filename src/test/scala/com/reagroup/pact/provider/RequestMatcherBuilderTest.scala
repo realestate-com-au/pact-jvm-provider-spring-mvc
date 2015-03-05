@@ -47,6 +47,15 @@ object RequestMatcherBuilderTest extends Specification with Mockito {
       }
     }
 
+    "decode the query string in path" in {
+      val pactRequest = Request("get", "/any?aaa=%22111%22", None, None, None, None)
+      builder.build(pactRequest) must beASuccessfulTry.which { builder =>
+        val request = builder.buildRequest(servletContext)
+        request.getQueryString === "aaa=\"111\""
+        request.getParameter("aaa") === "\"111\""
+      }
+    }
+
     "build a matcher for normal headers (non-cookie)" in {
       val pactRequest = Request("get", "/any", None, Some(Map("header1" -> "value1", "header2" -> "value2")), None, None)
       builder.build(pactRequest) must beASuccessfulTry.which { builder =>

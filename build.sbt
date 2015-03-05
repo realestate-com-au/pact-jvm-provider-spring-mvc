@@ -1,6 +1,6 @@
 name := "pact-jvm-provider-spring-mvc"
 
-version := "0.3.4"
+version := "0.3.5"
 
 organization := "com.reagroup"
 
