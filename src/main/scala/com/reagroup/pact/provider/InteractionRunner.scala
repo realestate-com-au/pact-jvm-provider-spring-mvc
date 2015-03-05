@@ -15,8 +15,8 @@ trait InteractionRunner {
   }
 
   def runSingle(interaction: Interaction, controller: AnyRef): Try[Unit] = {
-    RequestMatcherBuilder.build(interaction.request).map { request =>
-      val response = setupServer(controller).perform(request)
+    RequestMatcherBuilder.build(interaction.request).map { requestBuilder =>
+      val response = setupServer(controller).perform(requestBuilder)
       for (matcher <- responseMatchers(interaction.response)) {
         response.andExpect(matcher)
       }

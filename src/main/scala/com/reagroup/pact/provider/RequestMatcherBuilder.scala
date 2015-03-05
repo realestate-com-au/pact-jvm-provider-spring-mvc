@@ -1,12 +1,12 @@
 package com.reagroup.pact.provider
 
-import java.net.URLDecoder
+import javax.servlet.http.Cookie
+
 import au.com.dius.pact.model.Request
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders._
 import org.springframework.web.util.{UriComponents, UriComponentsBuilder}
 
-import scala.collection.JavaConversions._
 import scala.util.{Failure, Success, Try}
 
 object RequestMatcherBuilder {
@@ -14,8 +14,8 @@ object RequestMatcherBuilder {
   def build(request: Request): Try[MockHttpServletRequestBuilder] = {
     val components = buildUriComponents(request)
     createBuildByHttpMethod(request, components).map { builder =>
-      buildReqQueryString(builder, components)
       buildReqHeaders(builder, request)
+      buildCookies(builder, request, components)
       buildReqBody(builder, request)
       builder
     }
@@ -29,14 +29,14 @@ object RequestMatcherBuilder {
   }
 
   private def createBuildByHttpMethod(request: Request, components: UriComponents): Try[MockHttpServletRequestBuilder] = {
-    val path = components.getPath
+    val uri = components.toUri
     request.method.toLowerCase match {
-      case "get" => Success(get(path))
-      case "post" => Success(post(path))
-      case "put" => Success(put(path))
-      case "delete" => Success(delete(path))
-      case "options" => Success(options(path))
-      case "head" => Success(head(path))
+      case "get" => Success(get(uri))
+      case "post" => Success(post(uri))
+      case "put" => Success(put(uri))
+      case "delete" => Success(delete(uri))
+      case "options" => Success(options(uri))
+      case "head" => Success(head(uri))
       case unknownMethod => Failure(new UnsupportedOperationException(s"Can't handle http method: $unknownMethod"))
     }
   }
@@ -45,18 +45,20 @@ object RequestMatcherBuilder {
     request.body.foreach(body => builder.content(body))
   }
 
-  private def buildReqQueryString(builder: MockHttpServletRequestBuilder, components: UriComponents): Unit = {
-    val queryParams = components.getQueryParams
-    for (key <- queryParams.keySet) {
-      val values = queryParams.get(key).toList
-      val decoded = values.map(URLDecoder.decode(_, "UTF-8"))
-      builder.param(key, decoded: _*)
-    }
-  }
-
   private def buildReqHeaders(builder: MockHttpServletRequestBuilder, request: Request): Unit = for {
     headers <- request.headers
     (name, value) <- headers
   } builder.header(name, value)
+
+  private def buildCookies(builder: MockHttpServletRequestBuilder, request: Request, components: UriComponents): Unit = {
+    // FIXME will use `Request.findHeaderByCaseInsensitiveKey` when pact accepts pull request
+    // https://github.com/DiUS/pact-jvm/pull/95
+    request.cookie.getOrElse(Nil).map(_.split('=')).collect {
+      case Array(key, value) => new Cookie(key, value)
+    } match {
+      case Nil =>
+      case cookies => builder.cookie(cookies: _*)
+    }
+  }
 
 }
