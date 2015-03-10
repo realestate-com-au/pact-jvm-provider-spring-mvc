@@ -1,6 +1,5 @@
 package com.reagroup.pact.provider
 
-import au.com.dius.pact.model.{Interaction, Pact}
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
@@ -16,75 +15,17 @@ class ResponseCheckingTest extends Specification with Mockito {
   private val myControllerWithService = new MyController().withMyResponseService(myResponseService)
 
   private val pactRunner = new InteractionFileReader with InteractionRunner {
-    override val testClass: Class[_] = null
-    override lazy val allInteractions: Seq[Interaction] = Nil
+
+    @PactFile("file:src/test/resources/interactions.json")
+    class TestClass
+
+    override val testClass: Class[_] = classOf[TestClass]
   }
 
-  private val SampleInteraction = createInteraction(
-    """
-      |{
-      |  "provider_state": "<doesn't matter here>",
-      |  "description": "<doesn't matter here>",
-      |  "request": {
-      |    "method": "get",
-      |    "path": "/json",
-      |    "headers": {
-      |      "Content-Type": "application/json"
-      |    }
-      |  },
-      |  "response": {
-      |    "status": 200,
-      |    "body": {
-      |      "hello": "world"
-      |    }
-      |  }
-      |}
-    """.stripMargin)
-
-  private val SampleInteractionWithHeaders = createInteraction(
-    """
-      |{
-      |  "provider_state": "<doesn't matter here>",
-      |  "description": "<doesn't matter here>",
-      |  "request": {
-      |    "method": "get",
-      |    "path": "/json",
-      |    "headers": {
-      |      "Content-Type": "application/json"
-      |    }
-      |  },
-      |  "response": {
-      |    "status": 200,
-      |    "headers": {
-      |      "my-header1": "my-value1"
-      |    },
-      |    "body": {
-      |      "hello": "world"
-      |    }
-      |  }
-      |}
-    """.stripMargin)
-
-  private val SampleInteractionWithArrayBody = createInteraction(
-    """
-      |{
-      |  "provider_state": "<doesn't matter here>",
-      |  "description": "<doesn't matter here>",
-      |  "request": {
-      |    "method": "get",
-      |    "path": "/json",
-      |    "headers": {
-      |      "Content-Type": "application/json"
-      |    }
-      |  },
-      |  "response": {
-      |    "status": 200,
-      |    "body": {
-      |      "hello": ["world1", "world2"]
-      |    }
-      |  }
-      |}
-    """.stripMargin)
+  private val SampleInteraction = pactRunner.findInteractions("normal").head
+  private val SampleInteractionWithHeaders = pactRunner.findInteractions("with-headers").head
+  private val SampleInteractionWithCookies = pactRunner.findInteractions("with-cookies").head
+  private val SampleInteractionWithArrayBody = pactRunner.findInteractions("with-array-body").head
 
   "response checking" should {
     def testWithResponse(response: ResponseEntity[String]) = {
@@ -100,6 +41,11 @@ class ResponseCheckingTest extends Specification with Mockito {
     }
     "pass even if unexpected key in response body found" in testWithResponse {
       new ResponseEntity[String]( """{ "hello": "world", "extra-key": "value" }""", HttpStatus.OK)
+    }
+    "pass if required request cookies are also matched" in {
+      myResponseService.getResponseForCookies[String](Array("value1", "value2")) returns new ResponseEntity[String]( """{ "hello": "world" }""", HttpStatus.OK)
+      val result = pactRunner.runSingle(SampleInteractionWithCookies, myControllerWithService)
+      result must beASuccessfulTry
     }
   }
 
@@ -133,23 +79,6 @@ class ResponseCheckingTest extends Specification with Mockito {
       val result = pactRunner.runSingle(SampleInteractionWithArrayBody, myControllerWithService)
       result must beAFailedTry.which(_.getMessage === "hello[]: Expected 2 values but got 3")
     }
-  }
-
-  private def createInteraction(json: String): Interaction = {
-    Pact.from(
-      s"""
-         |{
-         | "provider": {
-         |   "name": "provider-side"
-         | },
-         | "consumer": {
-         |   "name": "consumer-side"
-         | },
-         | "interactions": [
-         |   $json
-          | ]
-          |}
-        """.stripMargin).interactions(0)
   }
 
   private def createHeaders(keyValues: (String, String)*): MultiValueMap[String, String] = {

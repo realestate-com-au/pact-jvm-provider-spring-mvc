@@ -7,11 +7,11 @@
   },
   "interactions": [
     {
-      "provider_state": "state1",
+      "provider_state": "normal",
       "description": "description1",
       "request": {
         "method": "get",
-        "path": "/hello/json1",
+        "path": "/json",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -19,22 +19,66 @@
       "response": {
         "status": 200,
         "body": {
-          "hello": "world1"
+          "hello": "world"
         }
       }
     },
     {
-      "provider_state": "state2",
+      "provider_state": "with-headers",
       "description": "description2",
       "request": {
-        "method": "post",
-        "path": "/hello/json2",
+        "method": "get",
+        "path": "/json",
         "headers": {
           "Content-Type": "application/json"
         }
       },
       "response": {
-        "status": 401
+        "status": 200,
+        "headers": {
+          "my-header1": "my-value1"
+        },
+        "body": {
+          "hello": "world"
+        }
+      }
+    },
+    {
+      "provider_state": "with-cookies",
+      "description": "description3",
+      "request": {
+        "method": "get",
+        "path": "/cookies",
+        "headers": {
+          "Content-Type": "application/json",
+          "Cookie": "cookie1=value1; cookie2=value2"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "hello": "world"
+        }
+      }
+    },
+    {
+      "provider_state": "with-array-body",
+      "description": "description4",
+      "request": {
+        "method": "get",
+        "path": "/json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "hello": [
+            "world1",
+            "world2"
+          ]
+        }
       }
     }
   ]
