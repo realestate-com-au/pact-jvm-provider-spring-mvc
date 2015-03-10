@@ -24,7 +24,7 @@ class PactRunner(klass: Class[_]) extends SpringJUnit4ClassRunner(klass: Class[_
       val controller = method.invokeExplosively(test)
       val providerState = method.getAnnotation(classOf[ProviderState])
 
-      findInteractions(providerState) match {
+      findInteractions(providerState.value()) match {
         case Nil => fail("Specified ProviderState is not found: " + providerState)
         case interactions => interactions.map(runSingle(_, controller)).foreach {
           case Failure(e) => throw e

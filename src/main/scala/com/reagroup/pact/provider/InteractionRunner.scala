@@ -10,8 +10,8 @@ import scala.util.Try
 trait InteractionRunner {
   this: InteractionFileReader =>
 
-  def findInteractions(pactSetup: ProviderState): Seq[Interaction] = {
-    allInteractions.filter(_.providerState.exists(_ == pactSetup.value()))
+  def findInteractions(providerState: String): Seq[Interaction] = {
+    allInteractions.filter(_.providerState.exists(_ == providerState))
   }
 
   def runSingle(interaction: Interaction, controller: AnyRef): Try[Unit] = {

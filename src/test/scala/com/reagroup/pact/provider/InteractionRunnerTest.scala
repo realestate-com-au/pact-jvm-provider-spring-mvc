@@ -13,21 +13,15 @@ class InteractionRunnerTest extends Specification with Mockito {
         Interaction("desc2", Some("providerState2"), mock[Request], mock[Response]))
       val runner = createRunner(interactions)
 
-      val found = runner.findInteractions(mockProviderState("providerState2"))
+      val found = runner.findInteractions("providerState2")
       found must have length 1
       found(0).description === "desc2"
     }
     "find empty list if not matching provider" in {
       val interactions = Seq(Interaction("desc1", Some("providerState1"), mock[Request], mock[Response]))
       val runner = createRunner(interactions)
-      runner.findInteractions(mockProviderState("different")) === Nil
+      runner.findInteractions("different") === Nil
     }
-  }
-
-  private def mockProviderState(value: String) = {
-    val providerState = mock[ProviderState]
-    providerState.value() returns value
-    providerState
   }
 
   private def createRunner(interactions: Seq[Interaction]) = new InteractionRunner with InteractionFileReader {
