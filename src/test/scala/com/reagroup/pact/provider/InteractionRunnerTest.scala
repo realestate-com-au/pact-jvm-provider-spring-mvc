@@ -4,7 +4,7 @@ import au.com.dius.pact.model.{Interaction, Request, Response}
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 
-object InteractionRunnerTest extends Specification with Mockito {
+class InteractionRunnerTest extends Specification with Mockito {
 
   "InteractionRunner" should {
     "find interactions by provider state" in {

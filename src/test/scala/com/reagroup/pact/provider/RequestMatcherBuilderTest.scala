@@ -10,7 +10,7 @@ import org.springframework.util.StreamUtils
 
 import scala.collection.JavaConversions._
 
-object RequestMatcherBuilderTest extends Specification with Mockito {
+class RequestMatcherBuilderTest extends Specification with Mockito {
 
   isolated
 

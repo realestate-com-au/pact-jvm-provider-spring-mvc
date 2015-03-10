@@ -5,7 +5,7 @@ import java.io.FileNotFoundException
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 
-object InteractionFileReaderTest extends Specification with Mockito {
+class InteractionFileReaderTest extends Specification with Mockito {
 
   "InteractionFileReader" should {
     "read interactions from the JSON file" in {
