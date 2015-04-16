@@ -11,8 +11,8 @@ crossScalaVersions := Seq("2.10.4", "2.11.4")
 sbtVersion := "0.13.7"
 
 libraryDependencies ++= Seq(
-  "au.com.dius" %% "pact-jvm-model" % "2.1.11",
-  "au.com.dius" %% "pact-jvm-consumer-junit" % "2.1.10",
+  "au.com.dius" %% "pact-jvm-model" % "2.1.13",
+  "au.com.dius" %% "pact-jvm-consumer-junit" % "2.1.13",
   "org.springframework" % "spring-test" % "4.1.3.RELEASE",
   "org.springframework" % "spring-webmvc" % "4.1.3.RELEASE",
   "org.springframework" % "spring-context" % "4.1.3.RELEASE",
