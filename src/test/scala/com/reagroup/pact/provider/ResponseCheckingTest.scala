@@ -23,11 +23,12 @@ class ResponseCheckingTest extends Specification with Mockito {
   }
 
   private val SampleInteraction = pactRunner.findInteractions("normal").head
+  private val SampleDeferredInteraction = pactRunner.findInteractions("deferred").head
   private val SampleInteractionWithHeaders = pactRunner.findInteractions("with-headers").head
   private val SampleInteractionWithCookies = pactRunner.findInteractions("with-cookies").head
   private val SampleInteractionWithArrayBody = pactRunner.findInteractions("with-array-body").head
 
-  "response checking" should {
+  "non-deferred response checking" should {
     def testWithResponse(response: ResponseEntity[String]) = {
       myResponseService.getResponse[String] returns response
       val result = pactRunner.runSingle(SampleInteraction, myControllerWithService)
@@ -49,7 +50,16 @@ class ResponseCheckingTest extends Specification with Mockito {
     }
   }
 
-  "response checking" should {
+  "deferred response checking" should {
+    "pass if response matches expected exactly" in {
+      val response = new ResponseEntity[String]( """{ "hello": "world" }""", HttpStatus.OK)
+      myResponseService.getResponse[String] returns response
+      val result = pactRunner.runSingle(SampleDeferredInteraction, myControllerWithService, timeout = Some(200))
+      result must beASuccessfulTry
+    }
+  }
+
+  "non-deferred response checking" should {
     "fail if status is not equal" in {
       myResponseService.getResponse[String] returns new ResponseEntity[String]( """{ "hello": "world" }""", HttpStatus.INTERNAL_SERVER_ERROR)
       val result = pactRunner.runSingle(SampleInteraction, myControllerWithService)
@@ -78,6 +88,14 @@ class ResponseCheckingTest extends Specification with Mockito {
       myResponseService.getResponse[String] returns new ResponseEntity[String]( """{ "hello": ["world1", "world2", "unexpected-item-here"]}""", HttpStatus.OK)
       val result = pactRunner.runSingle(SampleInteractionWithArrayBody, myControllerWithService)
       result must beAFailedTry.which(_.getMessage === "hello[]: Expected 2 values but got 3")
+    }
+  }
+
+  "deferred response checking" should {
+    "fail if status is not equal" in {
+      myResponseService.getResponse[String] returns new ResponseEntity[String]( """{ "hello": "world" }""", HttpStatus.INTERNAL_SERVER_ERROR)
+      val result = pactRunner.runSingle(SampleDeferredInteraction, myControllerWithService, timeout = Some(200))
+      result must beAFailedTry.which(_.getMessage === "Response status expected:<200> but was:<500>")
     }
   }
 

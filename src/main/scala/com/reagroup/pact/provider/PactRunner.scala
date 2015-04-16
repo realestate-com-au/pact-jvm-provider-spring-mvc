@@ -26,10 +26,12 @@ class PactRunner(klass: Class[_]) extends SpringJUnit4ClassRunner(klass: Class[_
 
       findInteractions(providerState.value()) match {
         case Nil => fail("Specified ProviderState is not found: " + providerState)
-        case interactions => interactions.map(runSingle(_, controller)).foreach {
-          case Failure(e) => throw e
-          case _ =>
-        }
+        case interactions =>
+          val timeout = Some(providerState.deferredResponseInMillis()).filter(_ > 0)
+          interactions.map(runSingle(_, controller, timeout)).foreach {
+            case Failure(e) => throw e
+            case _ =>
+          }
       }
     }
   }

@@ -14,7 +14,7 @@ object RequestMatcherBuilder {
 
   def build(request: Request): Try[MockHttpServletRequestBuilder] = {
     val components = buildUriComponents(request)
-    createBuildByHttpMethod(request, components).map { builder =>
+    createBuilderByHttpMethod(request, components).map { builder =>
       buildReqHeaders(builder, request)
       buildCookies(builder, request, components)
       buildReqBody(builder, request)
@@ -30,7 +30,7 @@ object RequestMatcherBuilder {
       .build
   }
 
-  private def createBuildByHttpMethod(request: Request, components: UriComponents): Try[MockHttpServletRequestBuilder] = {
+  private def createBuilderByHttpMethod(request: Request, components: UriComponents): Try[MockHttpServletRequestBuilder] = {
     val uri = components.toUri
     request.method.toLowerCase match {
       case "get" => Success(get(uri))

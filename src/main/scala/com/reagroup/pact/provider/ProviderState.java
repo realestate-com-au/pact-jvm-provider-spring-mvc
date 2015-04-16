@@ -11,4 +11,6 @@ public @interface ProviderState {
 
     String value();
 
+    long deferredResponseInMillis() default 0;
+
 }

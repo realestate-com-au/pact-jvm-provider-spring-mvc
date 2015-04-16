@@ -129,6 +129,11 @@ Mark a method as a preparing method for a specified provider state. The method w
 The content of `@ProviderState` should be exactly the same as one of the provider state in the pact JSON file, otherwise
 an error will be thrown.
 
+If your method in controller returns a `DeferredResponse` instead of immediate response like `EntityResponse`, you need to
+add `deferredResponseInMillis` with a value greater than `0` in `ProviderState`, like:
+
+    @ProviderState("my-service forbids a request with invalid token", deferredResponseInMillis = 1000)
+
 ### uriPathEq
 
 You can use the `uriPathEq` exposed by object `PactRunner` to check if two URIs path equal to each other without the host part,

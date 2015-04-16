@@ -24,6 +24,23 @@
       }
     },
     {
+      "provider_state": "deferred",
+      "description": "deferred description1",
+      "request": {
+        "method": "get",
+        "path": "/deferred_json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "hello": "world"
+        }
+      }
+    },
+    {
       "provider_state": "with-headers",
       "description": "description2",
       "request": {

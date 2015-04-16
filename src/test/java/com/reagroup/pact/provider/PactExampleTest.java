@@ -34,4 +34,10 @@ public class PactExampleTest {
         return myControllerWithService;
     }
 
+    @ProviderState(value = "response hello world for 'get /deferred_json'", deferredResponseInMillis = 200)
+    public MyController shouldResponseCorrectHelloWorldForDeferredGet() {
+        when(myResponseService.<String>getResponse()).thenReturn(new ResponseEntity<String>("{ \"hello\": \"world\" }", HttpStatus.OK));
+        return myControllerWithService;
+    }
+
 }

@@ -2,7 +2,9 @@ package com.reagroup.pact.provider
 
 import au.com.dius.pact.model.{Interaction, Response}
 import org.springframework.test.web.servlet.ResultMatcher
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders._
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers._
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.request
 import org.springframework.test.web.servlet.setup.MockMvcBuilders._
 
 import scala.util.Try
@@ -14,11 +16,20 @@ trait InteractionRunner {
     allInteractions.filter(_.providerState.exists(_ == providerState))
   }
 
-  def runSingle(interaction: Interaction, controller: AnyRef): Try[Unit] = {
+  def runSingle(interaction: Interaction, controller: AnyRef, timeout: Option[Long] = None): Try[Unit] = {
     RequestMatcherBuilder.build(interaction.request).map { requestBuilder =>
-      val response = setupServer(controller).perform(requestBuilder)
-      for (matcher <- responseMatchers(interaction.response)) {
-        response.andExpect(matcher)
+      timeout match {
+        case Some(t) => {
+          val server = standaloneSetup(controller).setAsyncRequestTimeout(t).build()
+          val asyncStarted = server.perform(requestBuilder).andExpect(request.asyncStarted).andReturn()
+          val response = server.perform(asyncDispatch(asyncStarted))
+          responseMatchers(interaction.response).foreach(response.andExpect)
+        }
+        case None => {
+          val server = standaloneSetup(controller).build()
+          val response = server.perform(requestBuilder)
+          responseMatchers(interaction.response).foreach(response.andExpect)
+        }
       }
     }
   }
@@ -32,10 +43,6 @@ trait InteractionRunner {
     } yield header.string(name, value)
 
     matchResStatus(response) :: matchResBodyAsJson(response).toList ::: matchResHeaders(response)
-  }
-
-  private def setupServer(controller: Object) = {
-    standaloneSetup(controller).build()
   }
 
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.async.DeferredResult;
 
 @Controller
 public class MyController {
@@ -14,6 +15,14 @@ public class MyController {
     @RequestMapping(value = "/json", method = RequestMethod.GET, consumes = "application/json", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> json() {
         return myResponseService.getResponse();
+    }
+
+    @RequestMapping(value = "/deferred_json", method = RequestMethod.GET, consumes = "application/json", produces = "application/json;charset=UTF-8")
+    public DeferredResult<ResponseEntity<String>> defJson() {
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<ResponseEntity<String>>(50);
+        ResponseEntity<String> response = myResponseService.getResponse();
+        result.setResult(response);
+        return result;
     }
 
     @RequestMapping(value = "/cookies", method = RequestMethod.GET, consumes = "application/json", produces = "application/json;charset=UTF-8")
