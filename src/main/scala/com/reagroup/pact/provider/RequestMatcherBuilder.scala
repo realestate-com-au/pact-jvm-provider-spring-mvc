@@ -53,8 +53,6 @@ object RequestMatcherBuilder {
   } builder.header(name, value)
 
   private def buildCookies(builder: MockHttpServletRequestBuilder, request: Request, components: UriComponents): Unit = {
-    // FIXME will use `Request.findHeaderByCaseInsensitiveKey` when pact accepts pull request
-    // https://github.com/DiUS/pact-jvm/pull/95
     request.cookie.getOrElse(Nil).map(_.split('=')).collect {
       case Array(key, value) => new Cookie(key, value)
     } match {
