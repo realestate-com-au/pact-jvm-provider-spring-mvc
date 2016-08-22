@@ -21,10 +21,18 @@ class InteractionFileReaderTest extends Specification with Mockito {
       val reader = createReader(classOf[TestClassWithoutPactFileAnnotation])
       reader.allInteractions should throwA[IllegalStateException]
     }
+    "read interactions from different JSON files in a directory" in {
+      val reader = createReader(classOf[TestClassWithFolder])
+      reader.allInteractions must have length 2
+      reader.allInteractions.map(_.getProviderState) === Seq("state 1", "state 2")
+    }
   }
 
   @PactFile("file:src/test/resources/interactions.json")
   class TestClass
+
+  @PactFolder("file:src/test/resources/pacts")
+  class TestClassWithFolder
 
   @PactFile("file:src/test/resources/not-found-file.json")
   class TestClassWithFileNotFound

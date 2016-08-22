@@ -1,0 +1,32 @@
+{
+  "provider": {
+    "name": "provider-side"
+  },
+  "consumer": {
+    "name": "consumer-side"
+  },
+  "interactions": [
+    {
+      "provider_state": "state 2",
+      "description": "description1",
+      "request": {
+        "method": "get",
+        "path": "/json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "hello": "world"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pact-specification": {
+      "version": "2.0.0"
+    }
+  }
+}
