@@ -117,7 +117,7 @@ Tells spring where the context file is. Notice we can override some beans in the
 
 ### @PactFile("file:src/pactProviderTest/resources/consumer-project-provider-project.json")
 
-Tells `PactRunner` where the pact file (upload by consumer) is
+Tells `PactRunner` where the pact file (upload by consumer) is. Alternatively one can use the @PactFolder to point the runner towards a directory containing all the pact files, that should be used for the execution.
 
 ### @ProviderState("my-service forbids a request with invalid token")
 
