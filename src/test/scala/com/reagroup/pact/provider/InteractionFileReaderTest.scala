@@ -11,7 +11,7 @@ class InteractionFileReaderTest extends Specification with Mockito {
     "read interactions from the JSON file" in {
       val reader = createReader(classOf[TestClass])
       reader.allInteractions must have length 5
-      reader.allInteractions.map(_.providerState) === Seq(Some("normal"), Some("deferred"), Some("with-headers"), Some("with-cookies"), Some("with-array-body"))
+      reader.allInteractions.map(_.getProviderState) === Seq("normal", "deferred", "with-headers", "with-cookies", "with-array-body")
     }
     "should report error if file is not found" in {
       val reader = createReader(classOf[TestClassWithFileNotFound])

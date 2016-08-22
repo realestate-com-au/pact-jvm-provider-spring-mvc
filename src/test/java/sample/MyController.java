@@ -19,7 +19,7 @@ public class MyController {
 
     @RequestMapping(value = "/deferred_json", method = RequestMethod.GET, consumes = "application/json", produces = "application/json;charset=UTF-8")
     public DeferredResult<ResponseEntity<String>> defJson() {
-        DeferredResult<ResponseEntity<String>> result = new DeferredResult<ResponseEntity<String>>(50);
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(50L);
         ResponseEntity<String> response = myResponseService.getResponse();
         result.setResult(response);
         return result;
