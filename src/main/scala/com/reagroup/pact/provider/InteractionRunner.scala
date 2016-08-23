@@ -18,8 +18,8 @@ trait InteractionRunner {
     allInteractions.filter(_.getProviderState == providerState)
   }
 
-  def runReqResponse(interaction: RequestResponseInteraction, controller: AnyRef, timeout: Option[Long] = None): Try[Unit] = {
-    RequestMatcherBuilder.build(interaction.getRequest).map { requestBuilder =>
+  def runReqResponse(interaction: RequestResponseInteraction, controller: AnyRef, timeout: Option[Long] = None, contextPath: Option[String]): Try[Unit] = {
+    RequestMatcherBuilder.build(interaction.getRequest, contextPath).map { requestBuilder =>
       timeout match {
         case Some(t) =>
           val server = standaloneSetup(controller).setAsyncRequestTimeout(t).build()
@@ -36,10 +36,10 @@ trait InteractionRunner {
 
   def runMsq(interaction: Message, controller: AnyRef, timeout: Option[Long] = None) = ???
 
-  def runSingle(interaction: Interaction, controller: AnyRef, timeout: Option[Long] = None): Try[Unit] = {
+  def runSingle(interaction: Interaction, controller: AnyRef, timeout: Option[Long] = None, contextPath: Option[String]): Try[Unit] = {
     interaction match {
       case requestResponse: RequestResponseInteraction =>
-        runReqResponse(requestResponse, controller, timeout);
+        runReqResponse(requestResponse, controller, timeout, contextPath);
       case msg: Message =>
         runMsq(msg, controller, timeout);
     }
