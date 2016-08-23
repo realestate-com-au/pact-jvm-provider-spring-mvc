@@ -13,8 +13,15 @@ import scala.util.{Failure, Success, Try}
 
 object RequestMatcherBuilder {
 
-  def build(request: Request): Try[MockHttpServletRequestBuilder] = {
-    val components = buildUriComponents(request)
+  def build(request: Request, contextPath: Option[String] = None): Try[MockHttpServletRequestBuilder] = {
+    val builder = createBuilder(request, buildUriComponents(request))
+    contextPath match {
+      case Some(path) => builder.map(builder => builder.contextPath(path))
+      case None => builder
+    }
+  }
+
+  private def createBuilder(request: Request, components: UriComponents): Try[MockHttpServletRequestBuilder] = {
     createBuilderByHttpMethod(request, components).map { builder =>
       buildReqHeaders(builder, request)
       buildCookies(builder, request, components)

@@ -29,6 +29,14 @@ class RequestMatcherBuilderTest extends Specification with Mockito {
       }
     }
 
+    "build a matcher using provided contextPath" in {
+      val pactRequest = new Request("get", "/contextPathProvidedByTheContainer/hello", null, null, OptionalBody.nullBody(), null)
+      builder.build(pactRequest, Some("/contextPathProvidedByTheContainer")) must beASuccessfulTry.which { builder =>
+        val request = builder.buildRequest(servletContext)
+        request.getContextPath === "/contextPathProvidedByTheContainer"
+      }
+    }
+
     "build a matcher for query string" in {
       val pactRequest = new Request("get", "/any", mapAsJavaMap(Map("aaa" -> util.Arrays.asList("111"),"bbb"-> util.Arrays.asList("222"))), null, OptionalBody.nullBody(), null)
       builder.build(pactRequest) must beASuccessfulTry.which { builder =>
