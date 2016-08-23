@@ -29,7 +29,6 @@ trait InteractionRunner {
         case None =>
           val server = standaloneSetup(controller).build()
           val response = server.perform(requestBuilder)
-          println(response)
           responseMatchers(interaction.getResponse).foreach(response.andExpect)
       }
     }
