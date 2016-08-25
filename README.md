@@ -154,6 +154,12 @@ See the file: <https://github.com/realestate-com-au/pact-jvm-provider-spring-mvc
 For Developers
 ==============
 
+Developing
+----------
+Before submitting a pull request, make sure the tests pass by running:
+
+`./sbt clean test`
+
 How to upload to sonatype
 -------------------------
 
