@@ -8,7 +8,7 @@ scalaVersion := "2.11.8"
 
 crossScalaVersions := Seq("2.10.4", "2.11.4")
 
-sbtVersion := "0.13.11"
+sbtVersion := "0.13.12"
 
 libraryDependencies ++= Seq(
   "au.com.dius" %% "pact-jvm-model" % "3.2.12",
