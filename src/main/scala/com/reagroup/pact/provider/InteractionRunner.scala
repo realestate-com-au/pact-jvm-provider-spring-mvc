@@ -1,48 +1,63 @@
 package com.reagroup.pact.provider
 
-import au.com.dius.pact.model.{Interaction, Response}
+import au.com.dius.pact.model.v3.messaging.Message
+import au.com.dius.pact.model.{Interaction, RequestResponseInteraction, Response}
 import org.springframework.test.web.servlet.ResultMatcher
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders._
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers._
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.request
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.{request, _}
 import org.springframework.test.web.servlet.setup.MockMvcBuilders._
 
+import scala.collection.JavaConverters._
+import scala.collection.mutable
 import scala.util.Try
 
 trait InteractionRunner {
   this: InteractionFileReader =>
 
   def findInteractions(providerState: String): Seq[Interaction] = {
-    allInteractions.filter(_.providerState.exists(_ == providerState))
+    allInteractions.filter(_.getProviderState == providerState)
   }
 
-  def runSingle(interaction: Interaction, controller: AnyRef, timeout: Option[Long] = None): Try[Unit] = {
-    RequestMatcherBuilder.build(interaction.request).map { requestBuilder =>
+  def runReqResponse(interaction: RequestResponseInteraction, controller: AnyRef, timeout: Option[Long] = None, contextPath: Option[String]): Try[Unit] = {
+    RequestMatcherBuilder.build(interaction.getRequest, contextPath).map { requestBuilder =>
       timeout match {
-        case Some(t) => {
+        case Some(t) =>
           val server = standaloneSetup(controller).setAsyncRequestTimeout(t).build()
           val asyncStarted = server.perform(requestBuilder).andExpect(request.asyncStarted).andReturn()
           val response = server.perform(asyncDispatch(asyncStarted))
-          responseMatchers(interaction.response).foreach(response.andExpect)
-        }
-        case None => {
+          responseMatchers(interaction.getResponse).foreach(response.andExpect)
+        case None =>
           val server = standaloneSetup(controller).build()
           val response = server.perform(requestBuilder)
-          responseMatchers(interaction.response).foreach(response.andExpect)
-        }
+          responseMatchers(interaction.getResponse).foreach(response.andExpect)
       }
     }
   }
 
-  private def responseMatchers(response: Response): Seq[ResultMatcher] = {
-    def matchResStatus(response: Response) = status.is(response.status)
-    def matchResBodyAsJson(response: Response) = response.body.map(body => content.json(body))
-    def matchResHeaders(response: Response) = for {
-      headers <- response.headers.toList
-      (name, value) <- headers
-    } yield header.string(name, value)
+  def runMsq(interaction: Message, controller: AnyRef, timeout: Option[Long] = None) = ???
 
-    matchResStatus(response) :: matchResBodyAsJson(response).toList ::: matchResHeaders(response)
+  def runSingle(interaction: Interaction, controller: AnyRef, timeout: Option[Long] = None, contextPath: Option[String]): Try[Unit] = {
+    interaction match {
+      case requestResponse: RequestResponseInteraction =>
+        runReqResponse(requestResponse, controller, timeout, contextPath);
+      case msg: Message =>
+        runMsq(msg, controller, timeout);
+    }
+  }
+
+  private def responseMatchers(response: Response): Seq[ResultMatcher] = {
+    def matchResStatus(response: Response)= status.is(response.getStatus)
+    def matchResBodyAsJson(response: Response) = Option(response.getBody.getValue).map(body => content().json(body))
+    def matchResHeaders(response: Response) = {
+      Option(response.getHeaders) match {
+        case None => mutable.Seq.empty
+        case Some(h) => for {
+          headers: (String, String) <- h.asScala
+        } yield header.string(headers._1, headers._2)
+      }
+    }
+
+    matchResStatus(response) :: matchResBodyAsJson(response).toList ::: matchResHeaders(response).toList
   }
 
 }

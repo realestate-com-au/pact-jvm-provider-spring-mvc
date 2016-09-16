@@ -117,7 +117,7 @@ Tells spring where the context file is. Notice we can override some beans in the
 
 ### @PactFile("file:src/pactProviderTest/resources/consumer-project-provider-project.json")
 
-Tells `PactRunner` where the pact file (upload by consumer) is
+Tells `PactRunner` where the pact file (upload by consumer) is. Alternatively one can use the `@PactFolder` to point the runner towards a directory containing all the pact files, that should be used for the execution.
 
 ### @ProviderState("my-service forbids a request with invalid token")
 
@@ -140,6 +140,10 @@ You can use the `uriPathEq` exposed by object `PactRunner` to check if two URIs 
 which may be useful when writing mocking methods.
 
 Say: `http://aaa.com:8888/hello/world` are equal to `https://bbb.com:9999/hello/world` with `uriPathEq`
+
+### @ProviderContextPath
+
+If the container uses a non-null context path, you can use this annotation to specify it so that MockMvc will be instrumented accordingly.
 
 Run the test
 ------------
