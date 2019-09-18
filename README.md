@@ -21,7 +21,7 @@ standaloneSetup(new MyController(myService))
 ```
 
 You can see it used provided `standaloneSetup` method to wrap a controller to perform request and valid response,
-without starting a real server. In this case, we can easily mocking dependencies and do the testing.
+without starting a real server. In this case, we can easily mock dependencies and do the testing.
 
 Since pact provider test also needs some preparing tasks (mocking), we can follow the same approach to make thing easier
 (compared to starting a real server).
